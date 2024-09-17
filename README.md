@@ -510,9 +510,15 @@ newman run Ebrahim_Hossain_SQA.postman_collection.json -e Ebrahim_Hossain_SQA.po
 newman run Ebrahim_Hossain_SQA.postman_collection.json -e Ebrahim_Hossain_SQA.postman_environment.json -r cli,htmlextra
 ```
 ##### Newman Report Summary:
-![Screenshot 2024-09-17 122215](https://github.com/user-attachments/assets/0d7be5fb-b593-489d-ba52-8a37baf03e6b)
-![Screenshot 2024-09-17 122415](https://github.com/user-attachments/assets/2b6f707c-d082-487e-82fc-3375917f76ed)
-![Screenshot 2024-09-17 122438](https://github.com/user-attachments/assets/bdc85479-d90d-4e3b-bd16-1f7db3c21bf8)
+Note: 1 Failed Test for postman random variable error where depositpaid varriable some times it work properly and some time it's get error.
+![Screenshot 2024-09-17 123118](https://github.com/user-attachments/assets/45b3ccbe-019c-4982-963e-06cd99210571)
+![Screenshot 2024-09-17 123136](https://github.com/user-attachments/assets/a4ceffca-ddfa-4f7a-9f0e-ce44bb342140)
+![Screenshot 2024-09-17 123156](https://github.com/user-attachments/assets/0d890604-90b3-4dd4-a21c-6aedb5dcbd18)
+![Screenshot 2024-09-17 123215](https://github.com/user-attachments/assets/a7a00615-4992-43d2-a752-741fa72d52c0)
+
+
+
+
 
 
 
