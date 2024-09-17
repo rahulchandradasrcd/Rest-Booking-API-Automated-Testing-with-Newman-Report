@@ -25,34 +25,41 @@ git clone https://github.com/rahulchandradasrcd/Rest-Booking-API-Automated-Testi
 ```
 
 3. Import the Postman collection:
-Open Postman.
-Click on the Import button.
-Select the file from the repository.
-Import the Postman environment:
-In Postman, click on the gear icon in the top right corner.
-Select Import and choose the file.
-Newman and Report Installation Process:
-Newman Install Command:
- npm install -g newman
-Newman Html Report Install Command:
- npm install -g newman-reporter-htmlextra
-Usage
-Select Environment:
-In Postman, select the appropriate environment (e.g., Development, Production) from the top-right dropdown.
-Run Collection:
-Select the imported collection from the Collections sidebar.
-Click on the Runner button to open the collection runner.
-Select the desired environment.
-Click Start Test to run the collection.
-View Results:
-Once the tests are complete, view the results in the Runner tab.
-Detailed test results can be viewed for each request.
-Testing
-Test Case Scenarios:
-1. Create New Booking
-Request URL: https://restful-booker.herokuapp.com/booking/
-Request Method: POST
-Pre-request Script:
+     * Open Postman.
+     * Click on the Import button.
+     * Select the file from the repository.
+4. Import the Postman environment:
+     * In Postman, click on the gear icon in the top right corner.
+     * Select Import and choose the file.
+5. Newman and Report Installation Process:
+     * Newman Install Command:
+     ```
+     npm install -g newman
+     ```
+    
+     * Newman Html Report Install Command:
+ 
+     ```
+     npm install -g newman-reporter-htmlextra
+     ```
+## Usage
+1. Select Environment:
+     * In Postman, select the appropriate environment (e.g., Development, Production) from the top-right dropdown.
+2. Run Collection:
+     * Select the imported collection from the Collections sidebar.
+     * Click on the Runner button to open the collection runner.
+     * Select the desired environment.
+     * Click Start Test to run the collection.
+3. View Results:
+     * Once the tests are complete, view the results in the Runner tab.
+     * Detailed test results can be viewed for each request.
+## Testing
+### Test Case Scenarios:
+####  1. Create New Booking
+##### Request URL: https://restful-booker.herokuapp.com/booking/
+##### Request Method: POST
+##### Pre-request Script:
+    
     var firstName = pm.variables.replaceIn("{{$randomFirstName}}")
     pm.environment.set("firstName", firstName)
     console.log("First Name Value "+firstName)
@@ -77,7 +84,8 @@ Pre-request Script:
     
     var additionalNeeds = pm.variables.replaceIn("{{$randomNoun}}")
     pm.environment.set("additionalNeeds", additionalNeeds)
-Request Body:
+    
+##### Request Body:
 
  {
      "firstname" : "{{firstName}}",
