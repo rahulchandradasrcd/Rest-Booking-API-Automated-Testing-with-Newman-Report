@@ -503,11 +503,11 @@ if(status == 200){
 ## Run Command:
 ##### Run Command for Console:
 ```
-newman run Ebrahim_Hossain_SQA.postman_collection.json -e Ebrahim_Hossain_SQA.postman_environment.json
+newman run API_Project.postman_collection.json -e API_Project.postman_environment.json
 ``` 
 ##### Run Command for Report:
 ```
-newman run Ebrahim_Hossain_SQA.postman_collection.json -e Ebrahim_Hossain_SQA.postman_environment.json -r cli,htmlextra
+newman run API_Project.postman_collection.json -e API_Project.postman_environment.json -r cli,htmlextra
 ```
 ##### Newman Report Summary:
 Note: 1 Failed Test for postman random variable error where depositpaid varriable some times it work properly and some time it's get error.
