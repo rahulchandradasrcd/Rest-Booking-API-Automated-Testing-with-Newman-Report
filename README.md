@@ -60,47 +60,103 @@ git clone https://github.com/rahulchandradasrcd/Rest-Booking-API-Automated-Testi
 ##### Request Method: POST
 ##### Pre-request Script:
     
-    var firstName = pm.variables.replaceIn("{{$randomFirstName}}")
-    pm.environment.set("firstName", firstName)
-    console.log("First Name Value "+firstName)
-    
-    var lastName = pm.variables.replaceIn("{{$randomLastName}}")
-    pm.environment.set("lastName", lastName)
-    console.log("Last Name Value "+lastName)
-    
-    var totalPrice = pm.variables.replaceIn("{{$randomInt}}")
-    pm.environment.set("totalPrice", totalPrice)
-    console.log(totalPrice)
-    
-    var depositPaid = pm.variables.replaceIn("{{$randomBoolean}}")
-    pm.environment.set("depositPaid", depositPaid)
-    console.log(depositPaid)
-    
-    //Date
-    const moment = require('moment')
-    const today = moment()
-    pm.environment.set("checkin", today.add(1,'d').format("YYYY-MM-DD"))
-    pm.environment.set("checkout",today.add(5,'d').format("YYYY-MM-DD") )
-    
-    var additionalNeeds = pm.variables.replaceIn("{{$randomNoun}}")
-    pm.environment.set("additionalNeeds", additionalNeeds)
-    
+```
+var firstname = pm.variables.replaceIn("{{$randomFirstName}}")
+pm.environment.set("firstname", firstname)
+//console.log(firstname)
+
+var lastname = pm.variables.replaceIn("{{$randomLastName}}")
+pm.environment.set("lastname", lastname)
+
+var totalprice = pm.variables.replaceIn("{{$randomInt}}")
+pm.environment.set("totalprice", totalprice)
+
+var depositpaid = pm.variables.replaceIn("{{$randomBoolean}}")
+pm.environment.set("depositpaid", depositpaid)
+
+const moment = require("moment")
+const today = moment()
+
+pm.environment.set("checkin", today.format("YYYY-MM-DD"))
+//pm.environment.set("checkin", today.subtract(5, 'd').format("YYYY-MM-DD"))
+pm.environment.set("checkout", today.add(7, 'd').format("YYYY-MM-DD"))
+
+var additionalneeds = pm.variables.replaceIn("{{$randomProduct}}")
+pm.environment.set("additionalneeds", additionalneeds)
+```
+##### Post-response Script:
+
+```
+//----------save bookingid an environment--------------------
+var jsonData = pm.response.json()
+pm.environment.set("id", jsonData.bookingid)
+
+//---------------Status Code------------------
+var status = pm.response.code
+if(status == 200){
+    pm.test("status code is 200 successfully Booked", function(){
+        pm.response.to.have.status(200);
+    });
+}else if(status == 400){
+    pm.test("Status code is 400 bad request", function(){
+        pm.response.to.have.status(400);
+    });
+}else if (status == 401){
+    pm.test("status code is 401 unauthorized", function(){
+        pm.response.to.have.status(401);
+    });
+}else if (status == 403){
+    pm.test("status code is 403 Forbidden", function(){
+        pm.response.to.have.status(403);
+    });
+}else if (status == 404){
+    pm.test("status code is 404 Not Found", function(){
+        pm.response.to.have.status(404);
+    });
+}else if (status == 405){
+    pm.test("status code is 405 Method not Allowed", function(){
+        pm.response.to.have.status(405);
+    });
+}else if (status == 500){
+    pm.test("status code is 500 Internal Server Error", function(){
+        pm.response.to.have.status(500);
+    });
+}else if (status == 501){
+    pm.test("status code is 501 Not Implemented", function(){
+        pm.response.to.have.status(501);
+    });
+}else if (status == 502){
+    pm.test("status code is 502 Bad Gateway", function(){
+        pm.response.to.have.status(502);
+    });
+}else if (status == 503){
+    pm.test("status code is 503 Service unavailable", function(){
+        pm.response.to.have.status(503);
+    });
+}else{
+    pm.test("Something Went Wrong.....")
+}
+```
+
 ##### Request Body:
 
- {
-     "firstname" : "{{firstName}}",
-     "lastname" : "{{lastName}}",
-     "totalprice" : {{totalPrice}},
-     "depositpaid" : {{depositPaid}},
-     "bookingdates" : {
-   	  "checkin" : "{{checkin}}",
-   	  "checkout" : "{{checkout}}"
-     },
-     "additionalneeds" : "{{additionalNeeds}}"
- }
-Response Body:
+ ```
+{
+	"firstname" : "{{firstname}}",
+	"lastname" : "{{lastname}}",
+	"totalprice" : "{{totalprice}}",
+	"depositpaid" : "{{depositpaid}}",
+	"bookingdates" : {
+    	"checkin" : "{{checkin}}",
+    	"checkout" : "{{checkout}}"
+	},
+	"additionalneeds" : "{{additionalneeds}}"
+}
+```
+##### Response Body:
 
- {
+ ```
+{
      "bookingid": 4334,
      "booking": {
          "firstname": "Joelle",
@@ -114,100 +170,349 @@ Response Body:
          "additionalneeds": "monitor"
      }
  }
-2. Get Booking Details By ID
-Request URL: https://restful-booker.herokuapp.com/booking/bookingid
-Request Method: GET
-Response Body:
+```
+##### 2. Get Booking Details By ID
+##### Request URL: https://restful-booker.herokuapp.com/booking/bookingid
+##### Request Method: GET
+##### Response Body:
+```
 {
-   "firstname": "D'angelo",
-   "lastname": "Feeney",
-   "totalprice": 757,
-   "depositpaid": true,
-   "bookingdates": {
-       "checkin": "2024-03-15",
-       "checkout": "2024-03-20"
-   },
-   "additionalneeds": "hard drive"
+    "firstname": "Mozelle",
+    "lastname": "Wilderman",
+    "totalprice": 533,
+    "depositpaid": true,
+    "bookingdates": {
+        "checkin": "2024-09-17",
+        "checkout": "2024-09-24"
+    },
+    "additionalneeds": "Chips"
 }
-3. Create A Token For Authentication.
-Request URL: https://restful-booker.herokuapp.com/auth
-Request Method: POST
-Pre-request Script: None
-Request Body:
+```
+##### Post-response Script: 
+
+```
+var getdata = pm.response.json()
+
+var status = pm.response.code
+if(status == 200){
+    pm.test("booking id validation", function(){
+    pm.expect(getdata.bookingid).to.eql(pm.environment.get("bookingid"))
+} )
+
+pm.test("firstname validation", function(){
+    pm.expect(getdata.firstname).to.eql(pm.environment.get("firstname"))
+})
+
+pm.test("lastname validation", function(){
+    pm.expect(getdata.lastname).to.eql(pm.environment.get("lastname"))
+})
+
+pm.test("totalprice validation", function(){
+    pm.expect(getdata.totalprice.toString()).to.eql(pm.environment.get("totalprice"))
+})
+
+pm.test("depositpaid validation", function(){
+    pm.expect(getdata.depositpaid.toString()).to.eql(pm.environment.get("depositpaid"))
+})
+
+pm.test("checkin validation", function(){
+    pm.expect(getdata.bookingdates.checkin).to.eql(pm.environment.get("checkin"))
+})
+
+pm.test("checkout validation", function(){
+    pm.expect(getdata.bookingdates.checkout).to.eql(pm.environment.get("checkout"))
+})
+
+pm.test("additionalneeds validation", function(){
+    pm.expect(getdata.additionalneeds).to.eql(pm.environment.get("additionalneeds"))
+})
+
+}else if(status == 400){
+    pm.test("Status code is 400 bad request", function(){
+        pm.response.to.have.status(400);
+    });
+}else if (status == 401){
+    pm.test("status code is 401 unauthorized", function(){
+        pm.response.to.have.status(401);
+    });
+}else if (status == 403){
+    pm.test("status code is 403 Forbidden", function(){
+        pm.response.to.have.status(403);
+    });
+}else if (status == 404){
+    pm.test("status code is 404 Not Found", function(){
+        pm.response.to.have.status(404);
+    });
+}else if (status == 405){
+    pm.test("status code is 405 Method not Allowed", function(){
+        pm.response.to.have.status(405);
+    });
+}else if (status == 500){
+    pm.test("status code is 500 Internal Server Error", function(){
+        pm.response.to.have.status(500);
+    });
+}else if (status == 501){
+    pm.test("status code is 501 Not Implemented", function(){
+        pm.response.to.have.status(501);
+    });
+}else if (status == 502){
+    pm.test("status code is 502 Bad Gateway", function(){
+        pm.response.to.have.status(502);
+    });
+}else if (status == 503){
+    pm.test("status code is 503 Service unavailable", function(){
+        pm.response.to.have.status(503);
+    });
+}else{
+    pm.test("Something Went Wrong.....")
+}
+```
+
+##### 3. Create A Token For Authentication.
+##### Request URL: https://restful-booker.herokuapp.com/auth
+##### Request Method: POST
+##### Pre-request Script: None
+##### Request Body:
+```
 {
    "username": "admin",
    "password": "password123"
 }
-Response Body:
+```
+##### Response Body:
 
+```
 {
    "token": "06eb798bf6f2caa"
 }
-4. Update the Booking Details
-Request URL: https://restful-booker.herokuapp.com/booking/bookingid
-Request Method: PUT
-Pre-request Script:
-    var firstName = pm.variables.replaceIn("{{$randomFirstName}}")
-    pm.environment.set("firstName", firstName)
-    console.log("First Name Value "+firstName)
-    
-    var lastName = pm.variables.replaceIn("{{$randomLastName}}")
-    pm.environment.set("lastName", lastName)
-    console.log("Last Name Value "+lastName)
-    
-    var totalPrice = pm.variables.replaceIn("{{$randomInt}}")
-    pm.environment.set("totalPrice", totalPrice)
-    console.log(totalPrice)
-    
-    var depositPaid = pm.variables.replaceIn("{{$randomBoolean}}")
-    pm.environment.set("depositPaid", depositPaid)
-    console.log(depositPaid)
-    
-    //Date
-    const moment = require('moment')
-    const today = moment()
-    pm.environment.set("checkin", today.add(1,'d').format("YYYY-MM-DD"))
-    pm.environment.set("checkout",today.add(5,'d').format("YYYY-MM-DD") )
-    
-    var additionalNeeds = pm.variables.replaceIn("{{$randomNoun}}")
-    pm.environment.set("additionalNeeds", additionalNeeds)
-Request Body:
+```
+##### Post-response Script: 
+```
+var token = pm.response.json()
+pm.environment.set("token", token.token)
 
- {
-     "firstname" : "{{firstName}}",
-     "lastname" : "{{lastName}}",
-     "totalprice" : {{totalPrice}},
-     "depositpaid" : {{depositPaid}},
-     "bookingdates" : {
-   	  "checkin" : "{{checkin}}",
-   	  "checkout" : "{{checkout}}"
-     },
-     "additionalneeds" : "{{additionalNeeds}}"
- }
-Response Body:
+var status = pm.response.code
+if(status == 200){
+    pm.test("Status code is 200 token created", function(){
+        pm.response.to.have.status(200);
+    });
+}else if(status == 400){
+    pm.test("Status code is 400 bad request", function(){
+        pm.response.to.have.status(400);
+    });
+}else if (status == 401){
+    pm.test("status code is 401 unauthorized", function(){
+        pm.response.to.have.status(401);
+    });
+}else if (status == 403){
+    pm.test("status code is 403 Forbidden", function(){
+        pm.response.to.have.status(403);
+    });
+}else if (status == 404){
+    pm.test("status code is 404 Not Found", function(){
+        pm.response.to.have.status(404);
+    });
+}else if (status == 405){
+    pm.test("status code is 405 Method not Allowed", function(){
+        pm.response.to.have.status(405);
+    });
+}else if (status == 500){
+    pm.test("status code is 500 Internal Server Error", function(){
+        pm.response.to.have.status(500);
+    });
+}else if (status == 501){
+    pm.test("status code is 501 Not Implemented", function(){
+        pm.response.to.have.status(501);
+    });
+}else if (status == 502){
+    pm.test("status code is 502 Bad Gateway", function(){
+        pm.response.to.have.status(502);
+    });
+}else if (status == 503){
+    pm.test("status code is 503 Service unavailable", function(){
+        pm.response.to.have.status(503);
+    });
+}else{
+    pm.test("Something Went Wrong.....")
+}
+```
 
- {
-     "bookingid": 4334,
-     "booking": {
-         "firstname": "Joelle",
-         "lastname": "Krajcik",
-         "totalprice": 266,
-         "depositpaid": true,
-         "bookingdates": {
-             "checkin": "2024-03-15",
-             "checkout": "2024-03-20"
-         },
-         "additionalneeds": "monitor"
-     }
- }
-5. Delete Booking Record
-Request URL: https://restful-booker.herokuapp.com/booking/bookingid
-Request Method: DELETE
-Response Body: None
-Run Command:
-Run Command for Console:
-newman run Ebrahim_Hossain_SQA.postman_collection.json -e Ebrahim_Hossain_SQA.postman_environment.json 
-Run Command for Report:
+##### 4. Update the Booking Details
+##### Request URL: https://restful-booker.herokuapp.com/booking/bookingid
+##### Request Method: PUT
+##### Pre-request Script:
+```
+var firstname = pm.variables.replaceIn("{{$randomFirstName}}")
+pm.environment.set("firstname", firstname)
+//console.log(firstname)
+
+var lastname = pm.variables.replaceIn("{{$randomLastName}}")
+pm.environment.set("lastname", lastname)
+
+var totalprice = pm.variables.replaceIn("{{$randomInt}}")
+pm.environment.set("totalprice", totalprice)
+
+var depositpaid = pm.variables.replaceIn("{{$randomBoolean}}")
+pm.environment.set("depositpaid", depositpaid)
+
+const moment = require("moment")
+const today = moment()
+
+pm.environment.set("checkin", today.format("YYYY-MM-DD"))
+//pm.environment.set("checkin", today.subtract(5, 'd').format("YYYY-MM-DD"))
+pm.environment.set("checkout", today.add(7, 'd').format("YYYY-MM-DD"))
+
+var additionalneeds = pm.variables.replaceIn("{{$randomProduct}}")
+pm.environment.set("additionalneeds", additionalneeds)
+```
+##### Post-response Script:
+
+```
+var status = pm.response.code
+if(status == 200){
+    pm.test("status code is 200 successfully Updated", function(){
+        pm.response.to.have.status(200);
+    });
+}else if(status == 400){
+    pm.test("Status code is 400 bad request", function(){
+        pm.response.to.have.status(400);
+    });
+}else if (status == 401){
+    pm.test("status code is 401 unauthorized", function(){
+        pm.response.to.have.status(401);
+    });
+}else if (status == 403){
+    pm.test("status code is 403 Forbidden", function(){
+        pm.response.to.have.status(403);
+    });
+}else if (status == 404){
+    pm.test("status code is 404 Not Found", function(){
+        pm.response.to.have.status(404);
+    });
+}else if (status == 405){
+    pm.test("status code is 405 Method not Allowed", function(){
+        pm.response.to.have.status(405);
+    });
+}else if (status == 500){
+    pm.test("status code is 500 Internal Server Error", function(){
+        pm.response.to.have.status(500);
+    });
+}else if (status == 501){
+    pm.test("status code is 501 Not Implemented", function(){
+        pm.response.to.have.status(501);
+    });
+}else if (status == 502){
+    pm.test("status code is 502 Bad Gateway", function(){
+        pm.response.to.have.status(502);
+    });
+}else if (status == 503){
+    pm.test("status code is 503 Service unavailable", function(){
+        pm.response.to.have.status(503);
+    });
+}else{
+    pm.test("Something Went Wrong.....")
+}
+```
+##### Request Body:
+
+ ```
+{
+	"firstname" : "{{firstname}}",
+	"lastname" : "{{lastname}}",
+	"totalprice" : "{{totalprice}}",
+	"depositpaid" : "{{depositpaid}}",
+	"bookingdates" : {
+    	"checkin" : "{{checkin}}",
+    	"checkout" : "{{checkout}}"
+	},
+	"additionalneeds" : "{{additionalneeds}}"
+}
+```
+##### Response Body:
+
+ ```
+{
+	"firstname" : "{{firstname}}",
+	"lastname" : "{{lastname}}",
+	"totalprice" : "{{totalprice}}",
+	"depositpaid" : "{{depositpaid}}",
+	"bookingdates" : {
+    	"checkin" : "{{checkin}}",
+    	"checkout" : "{{checkout}}"
+	},
+	"additionalneeds" : "{{additionalneeds}}"
+}
+```
+##### 5. Delete Booking Record
+##### Request URL: https://restful-booker.herokuapp.com/booking/bookingid
+##### Request Method: DELETE
+##### Response Body: None
+##### Post-response Script:
+
+```
+var status = pm.response.code
+if(status == 200){
+    pm.test("Status code is 200 Booking cannot delete successfully", function(){
+        pm.response.to.have.status(200);
+    });
+}else if(status == 201){
+    pm.test("Status code is 201 Booking Deleted successfully", function(){
+        pm.response.to.have.status(201);
+    });
+}else if(status == 400){
+    pm.test("Status code is 400 bad request", function(){
+        pm.response.to.have.status(400);
+    });
+}else if (status == 401){
+    pm.test("status code is 401 unauthorized", function(){
+        pm.response.to.have.status(401);
+    });
+}else if (status == 403){
+    pm.test("status code is 403 Forbidden", function(){
+        pm.response.to.have.status(403);
+    });
+}else if (status == 404){
+    pm.test("status code is 404 Not Found", function(){
+        pm.response.to.have.status(404);
+    });
+}else if (status == 405){
+    pm.test("status code is 405 Method not Allowed", function(){
+        pm.response.to.have.status(405);
+    });
+}else if (status == 500){
+    pm.test("status code is 500 Internal Server Error", function(){
+        pm.response.to.have.status(500);
+    });
+}else if (status == 501){
+    pm.test("status code is 501 Not Implemented", function(){
+        pm.response.to.have.status(501);
+    });
+}else if (status == 502){
+    pm.test("status code is 502 Bad Gateway", function(){
+        pm.response.to.have.status(502);
+    });
+}else if (status == 503){
+    pm.test("status code is 503 Service unavailable", function(){
+        pm.response.to.have.status(503);
+    });
+}else{
+    pm.test("Something Went Wrong.....")
+}
+```
+
+## Run Command:
+##### Run Command for Console:
+```
+newman run Ebrahim_Hossain_SQA.postman_collection.json -e Ebrahim_Hossain_SQA.postman_environment.json
+``` 
+##### Run Command for Report:
+```
 newman run Ebrahim_Hossain_SQA.postman_collection.json -e Ebrahim_Hossain_SQA.postman_environment.json -r cli,htmlextra
-Newman Report Summary:
-![Screenshot 2024-09-16 220650](https://github.com/user-attachments/assets/a501774e-6add-46ea-9287-76941458df65)
+```
+##### Newman Report Summary:
+![Screenshot 2024-09-17 122215](https://github.com/user-attachments/assets/0d7be5fb-b593-489d-ba52-8a37baf03e6b)
+![Screenshot 2024-09-17 122415](https://github.com/user-attachments/assets/2b6f707c-d082-487e-82fc-3375917f76ed)
+![Screenshot 2024-09-17 122438](https://github.com/user-attachments/assets/bdc85479-d90d-4e3b-bd16-1f7db3c21bf8)
+
+
+
